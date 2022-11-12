@@ -6,8 +6,11 @@ Install NodeNS packages:
 
     npm install
 
-Build static HTML/CSS/JS bundle:
+Build static HTML/CSS/JS bundle.  For a public facing web
+server 'gothello.interactwith.us' this would be:
 
+    REACT_APP_GOTHELLO_WS_API="wss://gothello.interactwith.us/api/v0" \
+    REACT_APP_GOTHELLO_API="https://gothello.interactwith.us/api/v0" \
     npm run build
 
 
@@ -45,8 +48,8 @@ cat /etc/apache2/sites-enabled/gothello-le-ssl.conf
 
         # Set up websockets to work through the proxy
         RewriteEngine On
+        RewriteCond %{HTTP:Upgrade} =websocket             [NC]
         RewriteCond %{REQUEST_URI}  ^/api                  [NC]
-        RewriteCond %{QUERY_STRING} transport=websocket    [NC]
         RewriteRule /(.*)           ws://localhost:8080/$1 [P,L]
 
 Include /etc/letsencrypt/options-ssl-apache.conf
